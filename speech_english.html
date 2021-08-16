@@ -1,0 +1,162 @@
+<!doctype html>
+	<head>
+		<style>
+			/* CSS comes here */
+
+			body {
+			    font-family: arial;
+			}
+			button {
+			    padding:10px;
+			    background-color:#6a67ce;
+			    color: #FFFFFF;
+			    border: 0px;
+			    cursor:pointer;
+			    border-radius: 5px;
+			}
+			#output {
+			    background-color:#F9F9F9;
+			    padding:10px;
+			    width: 100%;
+			    margin-top:20px;
+			    line-height:30px;
+			}
+			.hide {
+			    display:none;
+			}
+			.show {
+			    display:block;
+			}
+		</style>
+		<title>JavaScript Speech to Text -- English version-- </title>
+	</head>
+	<body>
+		<h2>JavaScript Speech to Text</h2>
+        <p>Click on the below button and speak something...</p>
+        <p><button type="button" onclick="runSpeechRecognition()">Speech to Text</button> &nbsp; <span id="action"></span></p>
+        <div id="output" class="hide">
+
+
+
+</div>
+
+
+  <div id="target">
+
+
+
+
+		<script>
+
+
+
+
+			/* JS comes here */
+		    function runSpeechRecognition() {
+		        // get output div reference
+		        var output = document.getElementById("output");
+		        // get action element reference
+		        var action = document.getElementById("action");
+                // new speech recognition object
+                var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                var recognition = new SpeechRecognition();
+            
+                // This runs when the speech recognition service starts
+                recognition.onstart = function() {
+                    action.innerHTML = "<small>listening, please speak...</small>";
+                };
+                
+                recognition.onspeechend = function() {
+                    action.innerHTML = "<small>stopped listening, if you want to continue, please click the button above</small>";
+                    recognition.stop();
+                }
+              recognition.lang = 'en-EN';
+/if you want to output Japanese, then type as this recognition.lang = 'ja-JP';/
+
+                // This runs when the speech recognition service returns result
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    var confidence = event.results[0][0].confidence;
+                    output.innerHTML = "<b>Text:</b> " + transcript + "<br/> <b>Confidence:</b> " + confidence*100+"%";
+                    output.classList.remove("hide");
+                };
+
+
+              
+                 // start recognition
+                 recognition.start();
+	        }
+		</script>
+
+
+
+
+
+
+  <hr>
+
+
+<! Qiitaより　https://qiita.com/youwht/items/8b681a856f59aa82d671 -->
+
+  </div>
+  <br>
+  <hr>
+
+
+
+
+
+<! div要素を画像化 -->
+
+
+  <img src="" id="result" />
+
+
+
+
+  <a href="" id="ss" download="html_ss.png">スクリーンショット(document.body全体)をダウンロード</a>
+
+  </div>
+
+
+
+
+
+<!★canvas.jsの設定-->
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+  <script>
+    //ロードされた際の処理として実施：
+    window.onload = function(){
+
+      //HTML内に画像を表示
+      html2canvas(document.getElementById("target"),{
+        onrendered: function(canvas){
+          //imgタグのsrcの中に、html2canvasがレンダリングした画像を指定する。
+          var imgData = canvas.toDataURL();
+          document.getElementById("result").src = imgData;
+        }
+      });
+
+      //ボタンを押下した際にダウンロードする画像を作る
+      html2canvas(document.body,{
+        onrendered: function(canvas){
+          //aタグのhrefにキャプチャ画像のURLを設定
+          var imgData = canvas.toDataURL();
+          document.getElementById("ss").href = imgData;
+        }
+      });
+
+    }
+  </script>
+
+
+
+
+
+	</body>
+</html>

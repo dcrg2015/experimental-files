@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      Javascript Screenshot Demo
+    </title>
+
+    <!-- http://html2canvas.hertzen.com/ -->
+    <!-- https://www.jsdelivr.com/package/npm/html2canvas -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.0.0-rc.7/dist/html2canvas.min.js"></script>
+    <script>
+    function capture () {
+      html2canvas(document.getElementById("demo")).then(canvas => {
+        // (A) CONVERT CANVAS TO IMAGE
+        let url = canvas.toDataURL("image/png");
+
+        // canvas.toDataURL(DATA-TYPE, OPTIONAL-QUALITY);
+        // So if you want JPG instead:
+        // let url = canvas.toDataURL("image/jpeg", 0.7);
+        // Also remember to change download="screenshot.jpg" below
+
+        // (B) "FORCE DOWNLOAD"
+        let nindown = document.getElementById("ninjadown")
+        nindown.href = url;
+        nindown.click();
+
+        // click() will simulate a click on the <a> link, starting the download.
+        // But some browsers may not allow it for security reasons.
+        // Better to let users click on the link manually.
+      });
+    }
+    </script>
+  </head>
+  <body>
+    <!-- DUMMY SCREENSHOT AREA -->
+    <div id="demo" style="background:#ffdbd9">
+      <h1>TEST</h1>
+      <input type="text" value="Dummy Text - Change and see how it captures below!"/>
+    </div>
+    
+    <!-- WILL NOT BE CAPTURED -->
+    <p>This will not be screen captured.</p>
+    <br><br>
+
+    <!-- SCREENSHOT CONTROLS -->
+    <input type="button" value="Capture" onclick="capture()"/>
+    <a href="#" id="ninjadown" download="screenshot.png"/></a>
+  </body>
+</html>
