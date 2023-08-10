@@ -1,0 +1,212 @@
+<!doctype html>
+	<head> <meta charset="UTF-8">
+		<style>
+			/* CSS here */
+
+			body {
+			    font-family: arial;
+			}
+			button {
+			    padding:10px;
+			    background-color:#6a67ce;
+			    color: #FFFFFF;
+			    border: 0px;
+			    cursor:pointer;
+			    border-radius: 5px;
+			}
+			#output {
+			    background-color:#F9F9F9;
+			    padding:10px;
+			    width: 100%;
+			    margin-top:20px;
+			    line-height:30px;
+			}
+			.hide {
+			    display:none;
+			}
+			.show {
+			    display:block;
+			}
+		</style>
+		<title>JavaScript Speech to Text -- English version-- </title>
+	</head>
+
+
+<body>
+
+
+<h2>音読評価システム by 種市高校</h2>
+        <p>下の「開始ボタン」を押してから英文を読んでください。マイクへのアクセス許可が求められた場合は、許可してください。読んでいる途中でも、無音状態が一定時間継続すると自動終了します。<br><br>
+一つの文章を読んで認識すると評価点(confidence)がつきます。何度か挑戦してみて良い点数が得られたら、一番下にある「スクリーンショット保存リンク」を押して、分かりやすい名前をつけて保存してください。何もしないと「Taneichi_English」という名前で保存されます。練習の流れとしては、良い評価点が出たらスクリーンショットを保存、そして次の文を読む　という流れになります。読んだ単語が全部正しく認識されて、かつ信頼性・評価(confidence)が93以上(目標)ならある一定レベルを満たしているといえます。<br><br>
+できるだけ高い信頼性・評価(confidence)になるように練習してください。</p>
+        <p><button type="button" onclick="runSpeechRecognition()">開始ボタン [マイクを許可しください]</button> <span id="action"></span></p>
+
+        <div id="output" class="hide">
+
+
+
+</div>
+
+
+  <div id="target">
+
+<script>
+
+/* 修正バージョン　JS comes here */
+function runSpeechRecognition() {
+// get output div reference
+		        var output = document.getElementById("output");
+		        // get action element reference
+		        var action = document.getElementById("action");
+// new speech recognition object
+                var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+                var recognition = new SpeechRecognition();
+            
+// This runs when the speech recognition service starts
+                recognition.onstart = function() {
+                    action.innerHTML = "<small>認識エンジン作動中です。始めてください。</small>";
+
+        setTimeout(function() {
+            recognition.stop();
+        }, 5000);
+
+
+
+                };
+
+
+
+
+                recognition.onspeechend = function() {
+                    action.innerHTML = "<blink><b><font color=red><small>現在停止中です。再度認識する場合はボタンを押します。</small></font></b></blink>";
+                    recognition.stop();
+                }
+
+
+
+              recognition.lang = 'en-EN';
+
+//if you want to output Japanese, then type as this recognition.lang = 'ja-JP';/
+
+
+
+// This runs when the speech recognition service returns result
+                recognition.onresult = function(event) {
+                    var transcript = event.results[0][0].transcript;
+                    var confidence = event.results[0][0].confidence;
+                    output.innerHTML = "<b>Text:</b> " + transcript + "<br/> <b>Confidence:</b> " + confidence*100+"%";
+                    output.classList.remove("hide");
+                };
+
+
+// start recognition
+ recognition.start();
+	        }
+
+
+</script>
+
+
+  <hr>
+
+
+<! Qiita -->
+
+  </div>
+  <br>
+  <hr>
+
+
+
+
+
+<! div要素を画像化 -->
+
+
+  <img src="" id="result" />
+
+
+
+
+  <a href="" id="ss" download="html_ss.jpg"></a>
+<a href="javascript:void(0);" onclick="aaa();" id="newDownload">★ スクリーンショット保存リンク</a>
+<!-- ダウンロード処理のためのダミーリンク -->
+<a href="" id="dummyDownload"></a>
+  </div>
+
+
+
+
+
+<!★canvas.jsの設定-->
+
+
+
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+  <script>
+    //ロードされた際の処理として実施：
+    window.onload = function(){
+
+
+
+      //HTML内に画像を表示
+      html2canvas(document.getElementById("target"),{
+        onrendered: function(canvas){
+console.log('rendaring');
+          //imgタグのsrcの中に、html2canvasがレンダリングした画像を指定する。
+          var imgData = canvas.toDataURL();
+          document.getElementById("result").src = imgData;
+        }
+      });
+
+
+
+      //ボタンを押下ダウンロード画像を作る
+      html2canvas(document.body,{
+        onrendered: function(canvas){
+console.log('download');
+          //aタグのhrefにキャプチャ画像のURLを設定
+          var imgData = canvas.toDataURL();
+          document.getElementById("ss").href = imgData;
+        }
+      });
+
+    }
+
+
+
+function aaa(){
+      //HTML内に画像を表示
+      html2canvas(document.getElementById("target"),{
+        onrendered: function(canvas){
+          //imgタグのsrcの中に、html2canvasがレンダリングした画像指定。
+          var imgData = canvas.toDataURL();
+          document.getElementById("result").src = imgData;
+        }
+      });
+
+      //ボタンを押下ダウンロードする画像を作る
+      html2canvas(document.body,{
+        onrendered: function(canvas){
+          //aタグのhrefにキャプチャ画像のURLを設定
+          var imgData = canvas.toDataURL();
+	let link = document.getElementById("dummyDownload");
+	  link.href= imgData;
+	  link.download = "Taneichi_English.jpg";
+	  link.click();
+        }
+      });
+
+}
+
+
+  </script>
+
+
+
+
+
+	</body>
+</html>
